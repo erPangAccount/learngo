@@ -6,6 +6,10 @@ type User struct {
 	List []int
 }
 
+func (user *User) String() string {
+	return fmt.Sprintf("User.List = %v", user.List)
+}
+
 func (user *User) Put(url string, form map[string]int) string {
 	user.List[0] = form["id"]
 	return "ok"

@@ -62,4 +62,8 @@ func main() {
 	//ok
 	//[12345 1234]
 
+	user := &mock.User{
+		List: []int{1, 2, 3, 4, 5},
+	}
+	fmt.Println(user) //User.List = [1 2 3 4 5]
 }
