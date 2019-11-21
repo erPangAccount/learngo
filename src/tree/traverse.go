@@ -12,3 +12,13 @@ func (node *Node) Traverse() {
 	node.Print()
 	node.Left.Traverse()
 }
+
+func (node *Node) TraceFunc(f func(*Node)) {
+	if node == nil {
+		return
+	}
+
+	node.Left.TraceFunc(f)
+	f(node)
+	node.Left.TraceFunc(f)
+}
