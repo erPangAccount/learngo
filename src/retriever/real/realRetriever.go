@@ -8,11 +8,11 @@ import (
 
 type RetrieverStruct struct {
 	UserAgent string
-	TimeOut time.Duration
+	TimeOut   time.Duration
 }
 
 func (r RetrieverStruct) Get(url string) string {
-	resp, err := http.Get(url);
+	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
 	}

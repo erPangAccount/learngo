@@ -11,9 +11,9 @@ type MyTreeNode struct {
 
 /**
 扩展树的后续遍历
- */
+*/
 func (myNode *MyTreeNode) postOrder() {
-	if myNode == nil || myNode.node == nil{
+	if myNode == nil || myNode.node == nil {
 		return
 	}
 	left := MyTreeNode{myNode.node.Left}
@@ -44,5 +44,5 @@ func main() {
 
 	var myRoot MyTreeNode
 	myRoot.node = &root
-	myRoot.postOrder()	//{0 <nil> <nil>} {2 <nil> <nil>} {5 0xc000004500 <nil>} {3 0xc0000044c0 0xc0000044e0}
+	myRoot.postOrder() //{0 <nil> <nil>} {2 <nil> <nil>} {5 0xc000004500 <nil>} {3 0xc0000044c0 0xc0000044e0}
 }
