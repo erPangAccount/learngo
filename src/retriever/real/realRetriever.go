@@ -11,7 +11,7 @@ type RetrieverStruct struct {
 	TimeOut   time.Duration
 }
 
-func (r RetrieverStruct) Get(url string) string {
+func (r *RetrieverStruct) Get(url string) string {
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
