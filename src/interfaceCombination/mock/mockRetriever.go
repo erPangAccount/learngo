@@ -6,6 +6,9 @@ type User struct {
 	List []int
 }
 
+/**
+实现系统自带Stringer接口
+*/
 func (user *User) String() string {
 	return fmt.Sprintf("User.List = %v", user.List)
 }
