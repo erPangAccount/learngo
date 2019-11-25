@@ -22,6 +22,15 @@ type errHandlerType func(writer http.ResponseWriter, request *http.Request) erro
 */
 func errHandler(handlerType errHandlerType) func(writer http.ResponseWriter, request *http.Request) {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		defer func() {
+			recoverErr := recover()
+			if recoverErr != nil {
+				log.Println(recoverErr)
+				http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
+		}()
+
 		err := handlerType(writer, request)
 		if err != nil {
 			log.Printf("Error request %v\n response: %s", request, err)

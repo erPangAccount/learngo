@@ -26,6 +26,7 @@ const requestFix = "/list/"
 func Handle(writer http.ResponseWriter, request *http.Request) error {
 	//判断外部传入是否为/list/开头的请求地址
 	if strings.Index(request.URL.Path, requestFix) != 0 {
+		panic(123)
 		return userError(fmt.Sprintf("the request prefix must be %s", requestFix))
 	}
 
