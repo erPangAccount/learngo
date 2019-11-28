@@ -45,4 +45,14 @@ func main() {
 	var myRoot MyTreeNode
 	myRoot.node = &root
 	myRoot.postOrder() //{0 <nil> <nil>} {2 <nil> <nil>} {5 0xc000004500 <nil>} {3 0xc0000044c0 0xc0000044e0}
+	fmt.Println()
+
+	c := root.TraverseWithChannel()
+	maxNode := 0
+	for node := range c {
+		if node.Value > maxNode {
+			maxNode = node.Value
+		}
+	}
+	fmt.Println("Max node value:", maxNode) //Max node value: 5
 }
