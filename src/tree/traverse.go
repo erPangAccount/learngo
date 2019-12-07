@@ -10,7 +10,7 @@ func (node *Node) Traverse() {
 
 	node.Left.Traverse()
 	node.Print()
-	node.Left.Traverse()
+	node.Right.Traverse()
 }
 
 func (node *Node) TraceFunc(f func(*Node)) {
@@ -20,5 +20,16 @@ func (node *Node) TraceFunc(f func(*Node)) {
 
 	node.Left.TraceFunc(f)
 	f(node)
-	node.Left.TraceFunc(f)
+	node.Right.TraceFunc(f)
+}
+
+func (node *Node) TraverseWithChannel() chan *Node {
+	out := make(chan *Node)
+	go func() {
+		node.TraceFunc(func(node *Node) {
+			out <- node
+		})
+		close(out)
+	}()
+	return out
 }
