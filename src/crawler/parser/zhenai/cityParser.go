@@ -3,8 +3,10 @@ package zhenai
 import (
 	"crawler/engine"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/url"
+	"os"
 	"regexp"
 	"strconv"
 )
@@ -18,6 +20,9 @@ func CityParser(contents []byte) engine.RequestResult {
 	requestResult.Items = append(requestResult.Items, heads.Items...)
 
 	// 获取列表里面的人的信息,其中涉及到翻页问题
+	userList := parserList(contents)
+	requestResult.Requests = append(requestResult.Requests, userList.Requests...)
+	requestResult.Items = append(requestResult.Items, userList.Items...)
 
 	return requestResult
 }
@@ -57,4 +62,34 @@ func parserHead(contents []byte) engine.RequestResult {
 		fmt.Printf("%s %s;%s;%s;%s\n", path, val[2], val[3], val[4], val[5])
 	}
 	return requesrResult
+}
+
+// 处理城市页面的用户列表部分，获取出用户列表里面的每个用户的姓名和请求地址
+var userListRe = regexp.MustCompile(`<a href="(http://album.zhenai.com/u/[0-9]+)"[^>]*>([^<]+)</a>`)
+
+func parserList(contents []byte) engine.RequestResult {
+	var requesrResult engine.RequestResult
+	contents = readTestFile("src/crawler/parser/zhenai/cityParserTestTemplate.html")
+
+	submatchs := userListRe.FindAllSubmatch(contents, -1)
+	for _, submatch := range submatchs {
+		fmt.Println(submatch)
+	}
+
+	return requesrResult
+}
+
+func readTestFile(fileName string) []byte {
+	file, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	bytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic(err)
+	}
+
+	return bytes
 }
