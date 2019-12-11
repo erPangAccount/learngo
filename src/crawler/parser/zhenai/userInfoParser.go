@@ -12,9 +12,12 @@ var userAvatar = regexp.MustCompile(`<div class="logo f-fl" style="background-im
 
 //var userPhotoRe = regexp.MustCompile(`<img src="(https://photo.zastatic.com/images/photo/[/0-9a-z.]+)[^"]+"[^>]*>`)
 var innerMonologueRe = regexp.MustCompile(`<div class="m-title" data-v-8b1eac0c>内心独白</div> <div class="m-content-box m-des" data-v-8b1eac0c><span data-v-8b1eac0c>([^<]+)</span></div>`)
-var someInfoRe = regexp.MustCompile(`<div class="m-title" data-v-8b1eac0c>个人资料</div> <div class="m-content-box" data-v-8b1eac0c><div class="purple-btns" data-v-8b1eac0c><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div></div> <div class="pink-btns" data-v-8b1eac0c><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div></div></div>`)
+
+//以下正则匹配不出来是因为这个下面的数据格式不一致，每个人的数据都可能不同
+var someInfoRe = regexp.MustCompile(`<div class="m-title" data-v-8b1eac0c>个人资料</div> <div class="m-content-box" data-v-8b1eac0c><div class="purple-btns" data-v-8b1eac0c><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([\d]+)岁</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([\d]+)cm</div><div class="m-btn purple" data-v-8b1eac0c>([\d]+)kg</div><div class="m-btn purple" data-v-8b1eac0c>工作地:([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>月收入:([^<]+)</div><div class="m-btn purple" data-v-8b1eac0c>([^<]+)</div></div> <div class="pink-btns" data-v-8b1eac0c><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>籍贯:([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>体型:([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>是否想要孩子:([^<]+)</div><div class="m-btn pink" data-v-8b1eac0c>何时结婚:([^<]+)</div></div></div>`)
 
 func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
+	log.Printf("%s", contents)
 	var requestResult engine.RequestResult
 	userInfo := model.User{}
 	//用户头像
@@ -32,7 +35,7 @@ func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
 	userInfo.InnerMonologue = extractString(contents, innerMonologueRe)
 
 	//个人信息
-	someInfos := someInfoRe.FindSubmatch(contents)
+	someInfos := s.FindSubmatch(contents)
 	log.Println(someInfos)
 	if len(someInfos) > 1 {
 		age, err := strconv.Atoi(string(someInfos[2]))
