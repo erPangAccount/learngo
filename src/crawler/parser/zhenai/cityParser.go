@@ -2,7 +2,6 @@ package zhenai
 
 import (
 	"crawler/engine"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/url"
@@ -33,8 +32,6 @@ var headRe = regexp.MustCompile(`<li class="f-photo-li"><a href="http://www.zhen
 func parserHead(contents []byte) engine.RequestResult {
 	var requesrResult engine.RequestResult
 	heads := headRe.FindAllSubmatch(contents, -1)
-
-	fmt.Println("---------------")
 	for _, val := range heads {
 		//decode url
 		path, err := url.PathUnescape(string(val[1]))
@@ -59,7 +56,6 @@ func parserHead(contents []byte) engine.RequestResult {
 			age:       age,
 			introduce: string(val[5]),
 		})
-		fmt.Printf("%s %s;%s;%s;%s\n", path, val[2], val[3], val[4], val[5])
 	}
 	return requesrResult
 }
@@ -69,11 +65,14 @@ var userListRe = regexp.MustCompile(`<a href="(http://album.zhenai.com/u/[0-9]+)
 
 func parserList(contents []byte) engine.RequestResult {
 	var requesrResult engine.RequestResult
-	contents = readTestFile("src/crawler/parser/zhenai/cityParserTestTemplate.html")
-
 	submatchs := userListRe.FindAllSubmatch(contents, -1)
 	for _, submatch := range submatchs {
-		fmt.Println(submatch)
+		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
+			Url:     string(submatch[1]),
+			Handler: engine.NilRequestResultFunc,
+		})
+
+		requesrResult.Items = append(requesrResult.Items, string(submatch[2]))
 	}
 
 	return requesrResult
