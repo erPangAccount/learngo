@@ -13,14 +13,22 @@ import (
 
 func Fetcher(url string) ([]byte, error) {
 	log.Printf("Fetching url: %s\n", url)
-	resp, err := http.Get(url)
+
+	request, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("new Request err: %s", err)
+	}
+	//添加user-agent信息,不添加此信息，获取珍爱网用户信息页面，会报403
+	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36")
+	//resp, err := http.Get(url)
+	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("httpCode err: ", resp.StatusCode)
+		return nil, fmt.Errorf("httpCode err: %v", resp.StatusCode)
 	}
 
 	respBodyReader := bufio.NewReader(resp.Body)

@@ -2,10 +2,8 @@ package zhenai
 
 import (
 	"crawler/engine"
-	"io/ioutil"
 	"log"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 )
@@ -41,7 +39,7 @@ func parserHead(contents []byte) engine.RequestResult {
 		}
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
 			Url:     path,
-			Handler: engine.NilRequestResultFunc,
+			Handler: UserInfoParser,
 		})
 		age, err := strconv.Atoi(string(val[4]))
 
@@ -69,26 +67,11 @@ func parserList(contents []byte) engine.RequestResult {
 	for _, submatch := range submatchs {
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
 			Url:     string(submatch[1]),
-			Handler: engine.NilRequestResultFunc,
+			Handler: UserInfoParser,
 		})
 
 		requesrResult.Items = append(requesrResult.Items, string(submatch[2]))
 	}
 
 	return requesrResult
-}
-
-func readTestFile(fileName string) []byte {
-	file, err := os.Open(fileName)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	bytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		panic(err)
-	}
-
-	return bytes
 }

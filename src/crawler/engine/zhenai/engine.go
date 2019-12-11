@@ -4,7 +4,9 @@ import (
 	"crawler/engine"
 	"crawler/fetche"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 )
 
 func Run(seed []engine.Request) {
@@ -27,4 +29,19 @@ func Run(seed []engine.Request) {
 		}
 		requests = append(requests, result.Requests...)
 	}
+}
+
+func ReadTestFile(fileName string) []byte {
+	file, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	bytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic(err)
+	}
+
+	return bytes
 }
