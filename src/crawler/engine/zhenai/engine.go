@@ -3,7 +3,6 @@ package zhenai
 import (
 	"crawler/engine"
 	"crawler/fetche"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -25,7 +24,7 @@ func Run(seed []engine.Request) {
 
 		result := targetRequest.Handler(contents)
 		for i, request := range result.Requests {
-			fmt.Printf("Url: %s; Handler: %v; Item: %s \n", request.Url, engine.GetFuncName(request.Handler), result.Items[i])
+			log.Printf("Url: %s; Handler: %v; Item: %s \n", request.Url, engine.GetFuncName(request.Handler), result.Items[i])
 		}
 		requests = append(requests, result.Requests...)
 	}

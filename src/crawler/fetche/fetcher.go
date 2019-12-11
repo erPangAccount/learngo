@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
+	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 	"io/ioutil"
 	"log"
@@ -32,11 +33,7 @@ func Fetcher(url string) ([]byte, error) {
 	}
 
 	respBodyReader := bufio.NewReader(resp.Body)
-	bytes, err := respBodyReader.Peek(1024)
-	if err != nil {
-		return nil, err
-	}
-	bodyEncode := charsetToUtf8(bytes)
+	bodyEncode := charsetToUtf8(respBodyReader)
 
 	ut8Reader := transform.NewReader(respBodyReader, bodyEncode.NewDecoder())
 	contents, err := ioutil.ReadAll(ut8Reader)
@@ -46,7 +43,11 @@ func Fetcher(url string) ([]byte, error) {
 	return contents, nil
 }
 
-func charsetToUtf8(b []byte) encoding.Encoding {
-	e, _, _ := charset.DetermineEncoding(b, "")
+func charsetToUtf8(r *bufio.Reader) encoding.Encoding {
+	bytes, err := r.Peek(1024)
+	if err != nil {
+		return unicode.UTF8
+	}
+	e, _, _ := charset.DetermineEncoding(bytes, "")
 	return e
 }

@@ -31,6 +31,7 @@ func parserHead(contents []byte) engine.RequestResult {
 	var requesrResult engine.RequestResult
 	heads := headRe.FindAllSubmatch(contents, -1)
 	for _, val := range heads {
+		name := string(val[3])
 		//decode url
 		path, err := url.PathUnescape(string(val[1]))
 		if err != nil {
@@ -38,8 +39,10 @@ func parserHead(contents []byte) engine.RequestResult {
 			continue
 		}
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
-			Url:     path,
-			Handler: UserInfoParser,
+			Url: path,
+			Handler: func(bytes []byte) engine.RequestResult {
+				return UserInfoParser(bytes, name)
+			},
 		})
 		age, err := strconv.Atoi(string(val[4]))
 
@@ -50,7 +53,7 @@ func parserHead(contents []byte) engine.RequestResult {
 			introduce string
 		}{
 			avatar:    string(val[2]),
-			name:      string(val[3]),
+			name:      name,
 			age:       age,
 			introduce: string(val[5]),
 		})
@@ -65,12 +68,15 @@ func parserList(contents []byte) engine.RequestResult {
 	var requesrResult engine.RequestResult
 	submatchs := userListRe.FindAllSubmatch(contents, -1)
 	for _, submatch := range submatchs {
+		name := string(submatch[2])
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
-			Url:     string(submatch[1]),
-			Handler: UserInfoParser,
+			Url: string(submatch[1]),
+			Handler: func(bytes []byte) engine.RequestResult {
+				return UserInfoParser(bytes, name)
+			},
 		})
 
-		requesrResult.Items = append(requesrResult.Items, string(submatch[2]))
+		requesrResult.Items = append(requesrResult.Items, name)
 	}
 
 	return requesrResult
