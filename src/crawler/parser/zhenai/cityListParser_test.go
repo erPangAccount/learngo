@@ -27,6 +27,8 @@ func TestCityListParser(t *testing.T) {
 	}
 
 	result := zhenai.CityListParser(contents)
+
+	// verify result
 	if len(result.Requests) != resultSize {
 		t.Errorf("result have %d; but got %d", resultSize, len(result.Requests))
 	}
@@ -46,5 +48,4 @@ func TestCityListParser(t *testing.T) {
 		}
 	}
 
-	// verify result
 }
