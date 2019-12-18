@@ -3,12 +3,13 @@ package zhenai
 import (
 	"crawler/engine"
 	"crawler/fetche"
-	"io/ioutil"
 	"log"
-	"os"
 )
 
-func Run(seed []engine.Request) {
+type SimpleEngine struct {
+}
+
+func (s SimpleEngine) Run(seed []engine.Request) {
 	var requests []engine.Request
 	requests = append(requests, seed...)
 
@@ -17,12 +18,11 @@ func Run(seed []engine.Request) {
 		requests = requests[1:]
 
 		//获取开始地址
-		contents, err := fetche.Fetcher(targetRequest.Url)
+		result, err := worker(targetRequest)
 		if err != nil {
-			log.Println(err)
+			continue
 		}
 
-		result := targetRequest.Handler(contents)
 		for i, request := range result.Requests {
 			log.Printf("Url: %s; Handler: %v; Item: %s \n", request.Url, engine.GetFuncName(request.Handler), result.Items[i])
 		}
@@ -30,17 +30,12 @@ func Run(seed []engine.Request) {
 	}
 }
 
-func ReadTestFile(fileName string) []byte {
-	file, err := os.Open(fileName)
+func worker(request engine.Request) (engine.RequestResult, error) {
+	contents, err := fetche.Fetcher(request.Url)
 	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	bytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		panic(err)
+		log.Println(err)
+		return engine.RequestResult{}, err
 	}
 
-	return bytes
+	return request.Handler(contents), nil
 }
