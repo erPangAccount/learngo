@@ -3,7 +3,6 @@ package zhenai
 import (
 	"crawler/engine"
 	"crawler/model"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -87,9 +86,9 @@ func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
 	//匹配用户其他信息,由于统一匹配不出来，只能先按照每个去匹配，然后分解成一个字符串再次进行匹配。
 
 	//个人信息栏
-	someInfos_1 := someInfoRe.FindAllSubmatch(contents, -1)
-	if len(someInfos_1) > 2 {
-		for _, val := range someInfos_1 {
+	someinfos1 := someInfoRe.FindAllSubmatch(contents, -1)
+	if len(someinfos1) > 2 {
+		for _, val := range someinfos1 {
 			if len(val) > 2 {
 				//星座
 				constellation := extractString(val[2], constellationRe)
@@ -167,10 +166,9 @@ func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
 	}
 
 	//择偶标准
-	someInfos_2 := objSomeInfoRe.FindAllSubmatch(contents, -1)
-	if len(someInfos_2) > 2 {
-		for _, val := range someInfos_2 {
-			log.Printf("%s", val)
+	someinfos2 := objSomeInfoRe.FindAllSubmatch(contents, -1)
+	if len(someinfos2) > 2 {
+		for _, val := range someinfos2 {
 			if len(val) > 1 {
 				//年龄
 				objAgeInfo := extractString(val[1], objAgeRe)
@@ -230,7 +228,6 @@ func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
 	}
 
 	requestResult.Items = append(requestResult.Items, userInfo)
-	log.Printf("%v", requestResult)
 	return requestResult
 }
 

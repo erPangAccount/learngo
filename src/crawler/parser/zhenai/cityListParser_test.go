@@ -7,19 +7,6 @@ import (
 	"testing"
 )
 
-const resultSize = 494
-
-var expectedUrls = []string{
-	"http://www.zhenai.com/zhenghun/aba",
-	"http://www.zhenai.com/zhenghun/akesu",
-	"http://www.zhenai.com/zhenghun/alashanmeng",
-}
-var expectedCities = []string{
-	"阿坝",
-	"阿克苏",
-	"阿拉善盟",
-}
-
 func TestCityListParser(t *testing.T) {
 	contents, err := ioutil.ReadFile("cityListParserTemplate.html")
 	if err != nil {
@@ -27,6 +14,19 @@ func TestCityListParser(t *testing.T) {
 	}
 
 	result := zhenai.CityListParser(contents)
+
+	const resultSize = 494
+
+	var expectedUrls = []string{
+		"http://www.zhenai.com/zhenghun/aba",
+		"http://www.zhenai.com/zhenghun/akesu",
+		"http://www.zhenai.com/zhenghun/alashanmeng",
+	}
+	var expectedCities = []string{
+		"阿坝",
+		"阿克苏",
+		"阿拉善盟",
+	}
 
 	// verify result
 	if len(result.Requests) != resultSize {
