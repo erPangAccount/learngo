@@ -8,8 +8,12 @@ import (
 
 func main() {
 	//zhenai.SimpleEngine{}.Run(zhenai2.Seed())
-	e := zhenai.ConcurrentEngine{
-		Scheduler:   &scheduler.SimpleScheduler{},
+	//e := zhenai.ConcurrentEngine{
+	//	Scheduler:   &scheduler.SimpleScheduler{},
+	//	WorkerCount: 10,
+	//}
+	e := zhenai.QueueEngine{
+		Scheduler:   &scheduler.QueueScheduler{},
 		WorkerCount: 10,
 	}
 

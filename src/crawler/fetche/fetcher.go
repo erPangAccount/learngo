@@ -9,6 +9,7 @@ import (
 	"golang.org/x/text/transform"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"time"
 )
@@ -23,7 +24,7 @@ func Fetcher(url string) ([]byte, error) {
 		return nil, fmt.Errorf("new Request err: %s", err)
 	}
 	//添加user-agent信息,不添加此信息，获取珍爱网用户信息页面，会报403
-	request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36")
+	request.Header.Add("User-Agent", getUserAgent())
 	//resp, err := http.Get(url)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
@@ -71,4 +72,7 @@ func getUserAgent() string {
 		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50",
 	}
 
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	index := r.Intn(len(agent))
+	return agent[index]
 }

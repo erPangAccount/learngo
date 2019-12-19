@@ -13,6 +13,8 @@ type ConcurrentEngine struct {
 type Scheduler interface {
 	Submit(engine.Request)
 	ReturnWorkChan(chan engine.Request)
+	WorkerReady(chan engine.Request)
+	Run()
 }
 
 func (c *ConcurrentEngine) Run(requests []engine.Request) {
