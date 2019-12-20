@@ -14,9 +14,9 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 	if q.WorkerCount < 1 {
 		panic("dont have worker work")
 	}
-	q.Scheduler.Run()
 
 	out := make(chan engine.RequestResult)
+	q.Scheduler.Run()
 	for i := 0; i < q.WorkerCount; i++ {
 		createQueueWorker(out, q.Scheduler)
 	}
@@ -25,10 +25,12 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 		q.Scheduler.Submit(request)
 	}
 
+	itemCount := 0
 	for {
 		result := <-out
 		for _, item := range result.Items {
-			log.Printf("%v", item)
+			log.Printf("Got Item: #%d: %s", itemCount, item)
+			itemCount++
 		}
 
 		for _, request := range result.Requests {

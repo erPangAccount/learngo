@@ -1,6 +1,8 @@
 package scheduler
 
-import "crawler/engine"
+import (
+	"crawler/engine"
+)
 
 type QueueScheduler struct {
 	requestChan chan engine.Request
@@ -16,7 +18,7 @@ func (q *QueueScheduler) ReturnWorkChan(chan engine.Request) {
 }
 
 func (q *QueueScheduler) WorkerReady(w chan engine.Request) {
-	q.requestChan = w
+	q.workChan <- w
 }
 
 func (q *QueueScheduler) Run() {
