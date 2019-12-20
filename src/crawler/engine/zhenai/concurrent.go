@@ -11,10 +11,14 @@ type ConcurrentEngine struct {
 }
 
 type Scheduler interface {
+	ReadNotify
 	Submit(engine.Request)
-	ReturnWorkChan(chan engine.Request)
-	WorkerReady(chan engine.Request)
+	ReturnWorkChan() chan engine.Request
 	Run()
+}
+
+type ReadNotify interface {
+	WorkerReady(chan engine.Request)
 }
 
 func (c *ConcurrentEngine) Run(requests []engine.Request) {
@@ -22,12 +26,11 @@ func (c *ConcurrentEngine) Run(requests []engine.Request) {
 		panic("dont has worker to do ！")
 	}
 
-	in := make(chan engine.Request)
 	out := make(chan engine.RequestResult)
-	c.Scheduler.ReturnWorkChan(in)
+	c.Scheduler.Run()
 
 	for i := 0; i < c.WorkerCount; i++ {
-		createWorker(in, out)
+		createWorker(c.Scheduler.ReturnWorkChan(), out)
 	}
 
 	for _, request := range requests {

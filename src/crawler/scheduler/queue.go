@@ -13,8 +13,8 @@ func (q *QueueScheduler) Submit(r engine.Request) {
 	q.requestChan <- r
 }
 
-func (q *QueueScheduler) ReturnWorkChan(chan engine.Request) {
-
+func (q *QueueScheduler) ReturnWorkChan() chan engine.Request {
+	return make(chan engine.Request)
 }
 
 func (q *QueueScheduler) WorkerReady(w chan engine.Request) {

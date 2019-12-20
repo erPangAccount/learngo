@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var limiter = time.Tick(100 * time.Millisecond) //
+var limiter = time.Tick(50 * time.Millisecond) //
 func Fetcher(url string) ([]byte, error) {
 	<-limiter //定时阻塞goroutine
 	log.Printf("Fetching url: %s\n", url)
@@ -24,7 +24,8 @@ func Fetcher(url string) ([]byte, error) {
 		return nil, fmt.Errorf("new Request err: %s", err)
 	}
 	//添加user-agent信息,不添加此信息，获取珍爱网用户信息页面，会报403
-	request.Header.Add("User-Agent", getUserAgent())
+	userAgent := getUserAgent()
+	request.Header.Add("User-Agent", userAgent)
 	//resp, err := http.Get(url)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
@@ -70,6 +71,7 @@ func getUserAgent() string {
 		"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50",
 		"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon 2.0)",
 		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50",
+		"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36",
 	}
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))

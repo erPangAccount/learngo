@@ -18,7 +18,7 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 	out := make(chan engine.RequestResult)
 	q.Scheduler.Run()
 	for i := 0; i < q.WorkerCount; i++ {
-		createQueueWorker(out, q.Scheduler)
+		createQueueWorker(q.Scheduler.ReturnWorkChan(), out, q.Scheduler)
 	}
 
 	for _, request := range seeds {
@@ -39,8 +39,7 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 	}
 }
 
-func createQueueWorker(out chan engine.RequestResult, s Scheduler) {
-	in := make(chan engine.Request)
+func createQueueWorker(in chan engine.Request, out chan engine.RequestResult, s ReadNotify) {
 	go func() {
 		for {
 			s.WorkerReady(in)
