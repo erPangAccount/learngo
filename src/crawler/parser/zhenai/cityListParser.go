@@ -18,7 +18,7 @@ func CityListParser(contents []byte) engine.RequestResult {
 			Handler: CityParser,
 		}
 		requestResult.Requests = append(requestResult.Requests, request)
-		requestResult.Items = append(requestResult.Items, val[2])
+		//requestResult.Items = append(requestResult.Items, val[2])
 		limit--
 		if limit == 0 {
 			break

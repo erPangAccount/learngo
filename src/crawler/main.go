@@ -2,6 +2,7 @@ package main
 
 import (
 	"crawler/engine/zhenai"
+	"crawler/persist"
 	"crawler/scheduler"
 	zhenai2 "crawler/seed/zhenai"
 )
@@ -15,6 +16,7 @@ func main() {
 	e := zhenai.QueueEngine{
 		Scheduler:   &scheduler.QueueScheduler{},
 		WorkerCount: 10,
+		ItemChan:    persist.ItemServer(),
 	}
 
 	e.Run(zhenai2.Seed())

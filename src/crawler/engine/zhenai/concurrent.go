@@ -2,12 +2,12 @@ package zhenai
 
 import (
 	"crawler/engine"
-	"log"
 )
 
 type ConcurrentEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int
+	ItemChan    chan interface{}
 }
 
 type Scheduler interface {
@@ -37,12 +37,10 @@ func (c *ConcurrentEngine) Run(requests []engine.Request) {
 		c.Scheduler.Submit(request)
 	}
 
-	itemCount := 0
 	for {
 		result := <-out
 		for _, item := range result.Items {
-			log.Printf("Got Item: #%d: %s", itemCount, item)
-			itemCount++
+			go func() { c.ItemChan <- item }()
 		}
 
 		for _, request := range result.Requests {

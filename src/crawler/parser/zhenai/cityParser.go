@@ -14,12 +14,15 @@ func CityParser(contents []byte) engine.RequestResult {
 	//获取城市页的顶部的人的信息
 	heads := parserHead(contents)
 	requestResult.Requests = append(requestResult.Requests, heads.Requests...)
-	requestResult.Items = append(requestResult.Items, heads.Items...)
+	//requestResult.Items = append(requestResult.Items, heads.Items...)
 
 	// 获取列表里面的人的信息,其中涉及到翻页问题
 	userList := parserList(contents)
 	requestResult.Requests = append(requestResult.Requests, userList.Requests...)
-	requestResult.Items = append(requestResult.Items, userList.Items...)
+	//requestResult.Items = append(requestResult.Items, userList.Items...)
+
+	otherUrl := getOtherUrl(contents)
+	requestResult.Requests = append(requestResult.Requests, otherUrl.Requests...)
 
 	return requestResult
 }
@@ -80,4 +83,21 @@ func parserList(contents []byte) engine.RequestResult {
 	}
 
 	return requesrResult
+}
+
+//获取当前城市页面的其他链接
+var urlRe = regexp.MustCompile(`href="(http://www.zhenai.com/zhenghun/[^"]+)"`)
+
+func getOtherUrl(contents []byte) engine.RequestResult {
+	var requestResult engine.RequestResult
+
+	submatchs := urlRe.FindAllSubmatch(contents, -1)
+	for _, submatch := range submatchs {
+		requestResult.Requests = append(requestResult.Requests, engine.Request{
+			Url:     string(submatch[1]),
+			Handler: CityParser,
+		})
+	}
+
+	return requestResult
 }
