@@ -40,7 +40,7 @@ func (c *ConcurrentEngine) Run(requests []engine.Request) {
 	for {
 		result := <-out
 		for _, item := range result.Items {
-			go func() { c.ItemChan <- item }()
+			go func(item interface{}) { c.ItemChan <- item }(item)
 		}
 
 		for _, request := range result.Requests {

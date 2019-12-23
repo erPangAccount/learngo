@@ -12,6 +12,7 @@ func main() {
 	//e := zhenai.ConcurrentEngine{
 	//	Scheduler:   &scheduler.SimpleScheduler{},
 	//	WorkerCount: 10,
+	//	ItemChan:    persist.ItemServer(),
 	//}
 	e := zhenai.QueueEngine{
 		Scheduler:   &scheduler.QueueScheduler{},
