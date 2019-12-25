@@ -43,7 +43,10 @@ var objFigureRe = regexp.MustCompile(`体型:(.+)`)            //身材
 var objHasChildRe = regexp.MustCompile(`(.*有.*孩.*)`)       //有孩子没有
 var objWantHaveChildRe = regexp.MustCompile(`是否想要孩子:(.+)`) //想要孩子吗
 
-func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
+var userIdRe = regexp.MustCompile(`https://album.zhenai.com/u/([\d]+)`)
+
+func UserInfoParser(contents []byte, url string,
+	userNickName string) engine.RequestResult {
 	var requestResult engine.RequestResult
 	userInfo := model.User{}
 	//用户头像
@@ -227,7 +230,12 @@ func UserInfoParser(contents []byte, userNickName string) engine.RequestResult {
 		}
 	}
 
-	requestResult.Items = append(requestResult.Items, userInfo)
+	requestResult.Items = append(requestResult.Items, engine.Item{
+		Url:    url,
+		Type:   "",
+		Id:     extractString([]byte(url), userIdRe),
+		DoType: userInfo,
+	})
 	return requestResult
 }
 

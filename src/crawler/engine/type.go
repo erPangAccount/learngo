@@ -6,6 +6,15 @@ import (
 	"runtime"
 )
 
+const ElasticHost = "http://192.168.12.13:9200"
+
+type Item struct {
+	Url    string
+	Type   string
+	Id     string
+	DoType interface{}
+}
+
 type Request struct {
 	Url     string
 	Handler func([]byte) RequestResult
@@ -13,7 +22,7 @@ type Request struct {
 
 type RequestResult struct {
 	Requests []Request
-	Items    []interface{}
+	Items    []Item
 }
 
 func NilRequestResultFunc([]byte) RequestResult {

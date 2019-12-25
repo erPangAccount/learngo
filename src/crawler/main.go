@@ -14,10 +14,15 @@ func main() {
 	//	WorkerCount: 10,
 	//	ItemChan:    persist.ItemServer(),
 	//}
+	itemChan, err := persist.ItemServer()
+	if err != nil {
+		panic(err)
+	}
+
 	e := zhenai.QueueEngine{
 		Scheduler:   &scheduler.QueueScheduler{},
 		WorkerCount: 10,
-		ItemChan:    persist.ItemServer(),
+		ItemChan:    itemChan,
 	}
 
 	e.Run(zhenai2.Seed())

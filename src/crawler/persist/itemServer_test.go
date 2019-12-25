@@ -1,21 +1,15 @@
-package zhenai_test
+package persist
 
 import (
 	"crawler/engine"
 	"crawler/model"
-	"crawler/parser/zhenai"
-	"io/ioutil"
+	"encoding/json"
+	"github.com/olivere/elastic"
+	"golang.org/x/net/context"
 	"testing"
 )
 
-func TestUserInfoParser(t *testing.T) {
-	contents, err := ioutil.ReadFile("userInfoParserTemplate.html")
-	if err != nil {
-		panic(err)
-	}
-
-	result := zhenai.UserInfoParser(contents, "https://album.zhenai.com/u/1662184411", "")
-
+func TestSave(t *testing.T) {
 	user := engine.Item{
 		Url:  "https://album.zhenai.com/u/1662184411",
 		Type: "",
@@ -59,9 +53,40 @@ func TestUserInfoParser(t *testing.T) {
 		},
 	}
 
-	// verify result
-	resultUser := result.Items[0]
-	if resultUser != user {
-		t.Errorf("Got %+v, expected %+v", resultUser, user)
+	id, err := save(user)
+	if err != nil && id != "exists" {
+		panic(err)
 	}
+
+	// TODO 开启elasticsearch后再试
+	client, err := elastic.NewClient(
+		elastic.SetURL(engine.ElasticHost),
+		elastic.SetSniff(false),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	if user.Type == "" {
+		user.Type = "index"
+	}
+
+	result, err := client.Get().Index("test").Type(user.Type).Id(user.Id).Do(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	var getData engine.Item
+	err = json.Unmarshal(result.Source, &getData)
+	if err != nil {
+		panic(err)
+	}
+	getData.DoType, err = model.FromJsonObj(getData.DoType)
+	if err != nil {
+		panic(err)
+	}
+
+	if getData != user {
+		t.Errorf("Got %+v, expected %+v", getData, user)
+	}
+	t.Logf("Got %+v", getData)
 }

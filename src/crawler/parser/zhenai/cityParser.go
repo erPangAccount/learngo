@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/url"
 	"regexp"
-	"strconv"
 )
 
 func CityParser(contents []byte) engine.RequestResult {
@@ -44,21 +43,8 @@ func parserHead(contents []byte) engine.RequestResult {
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
 			Url: path,
 			Handler: func(bytes []byte) engine.RequestResult {
-				return UserInfoParser(bytes, name)
+				return UserInfoParser(bytes, path, name)
 			},
-		})
-		age, err := strconv.Atoi(string(val[4]))
-
-		requesrResult.Items = append(requesrResult.Items, struct {
-			avatar    string
-			name      string
-			age       int
-			introduce string
-		}{
-			avatar:    string(val[2]),
-			name:      name,
-			age:       age,
-			introduce: string(val[5]),
 		})
 	}
 	return requesrResult
@@ -72,14 +58,13 @@ func parserList(contents []byte) engine.RequestResult {
 	submatchs := userListRe.FindAllSubmatch(contents, -1)
 	for _, submatch := range submatchs {
 		name := string(submatch[2])
+		s := string(submatch[1])
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
-			Url: string(submatch[1]),
+			Url: s,
 			Handler: func(bytes []byte) engine.RequestResult {
-				return UserInfoParser(bytes, name)
+				return UserInfoParser(bytes, s, name)
 			},
 		})
-
-		requesrResult.Items = append(requesrResult.Items, name)
 	}
 
 	return requesrResult

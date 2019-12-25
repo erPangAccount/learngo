@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 type User struct {
 	Avatar         string `json:"avatar"`          // 头像
 	NickName       string `json:"nickname"`        //昵称
@@ -38,4 +40,19 @@ type UserObj struct {
 	ObjFigure        string `json:"obj_figure"`          //身材
 	ObjHasChild      string `json:"obj_has_child"`       //有孩子没有
 	ObjWantHaveChild string `json:"obj_want_have_child"` //想要孩子吗
+}
+
+func FromJsonObj(o interface{}) (User, error) {
+	var user User
+	jsonStr, err := json.Marshal(o)
+	if err != nil {
+		return user, err
+	}
+
+	err = json.Unmarshal(jsonStr, &user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }

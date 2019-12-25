@@ -7,7 +7,7 @@ import (
 type QueueEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int
-	ItemChan    chan interface{}
+	ItemChan    chan engine.Item
 }
 
 func (q *QueueEngine) Run(seeds []engine.Request) {
@@ -28,7 +28,7 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 	for {
 		result := <-out
 		for _, item := range result.Items {
-			go func(item interface{}) {
+			go func(item engine.Item) {
 				q.ItemChan <- item
 			}(item)
 		}
