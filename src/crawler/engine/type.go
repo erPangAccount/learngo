@@ -15,9 +15,11 @@ type Item struct {
 	DoType interface{}
 }
 
+type ParserFunc func([]byte, string) RequestResult
+
 type Request struct {
 	Url     string
-	Handler func([]byte) RequestResult
+	Handler ParserFunc
 }
 
 type RequestResult struct {
@@ -25,7 +27,7 @@ type RequestResult struct {
 	Items    []Item
 }
 
-func NilRequestResultFunc([]byte) RequestResult {
+func NilRequestResultFunc([]byte, string) RequestResult {
 	return RequestResult{}
 }
 

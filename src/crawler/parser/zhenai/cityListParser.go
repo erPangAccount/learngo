@@ -7,7 +7,7 @@ import (
 
 var cityRe *regexp.Regexp = regexp.MustCompile(`<a [_a-z\-\=\" ]*href="(http://www.zhenai.com/zhenghun/[a-z0-9]+)" [^>]*>([^<]+)</a>`)
 
-func CityListParser(contents []byte) engine.RequestResult {
+func CityListParser(contents []byte, _ string) engine.RequestResult {
 	var requestResult engine.RequestResult
 
 	citySlice := cityRe.FindAllSubmatch(contents, -1)

@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-func CityParser(contents []byte) engine.RequestResult {
+func CityParser(contents []byte, _ string) engine.RequestResult {
 	var requestResult engine.RequestResult
 
 	//获取城市页的顶部的人的信息
@@ -33,7 +33,6 @@ func parserHead(contents []byte) engine.RequestResult {
 	var requesrResult engine.RequestResult
 	heads := headRe.FindAllSubmatch(contents, -1)
 	for _, val := range heads {
-		name := string(val[3])
 		//decode url
 		path, err := url.PathUnescape(string(val[1]))
 		if err != nil {
@@ -41,10 +40,8 @@ func parserHead(contents []byte) engine.RequestResult {
 			continue
 		}
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
-			Url: path,
-			Handler: func(bytes []byte) engine.RequestResult {
-				return UserInfoParser(bytes, path, name)
-			},
+			Url:     path,
+			Handler: CreateParserFunc(string(val[3])),
 		})
 	}
 	return requesrResult
@@ -57,13 +54,9 @@ func parserList(contents []byte) engine.RequestResult {
 	var requesrResult engine.RequestResult
 	submatchs := userListRe.FindAllSubmatch(contents, -1)
 	for _, submatch := range submatchs {
-		name := string(submatch[2])
-		s := string(submatch[1])
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
-			Url: s,
-			Handler: func(bytes []byte) engine.RequestResult {
-				return UserInfoParser(bytes, s, name)
-			},
+			Url:     string(submatch[1]),
+			Handler: CreateParserFunc(string(submatch[2])),
 		})
 	}
 
@@ -85,4 +78,10 @@ func getOtherUrl(contents []byte) engine.RequestResult {
 	}
 
 	return requestResult
+}
+
+func CreateParserFunc(name string) engine.ParserFunc {
+	return func(bytes []byte, url string) engine.RequestResult {
+		return UserInfoParser(bytes, url, name)
+	}
 }
