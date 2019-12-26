@@ -37,5 +37,5 @@ func worker(request engine.Request) (engine.RequestResult, error) {
 		return engine.RequestResult{}, err
 	}
 
-	return request.Handler(contents, ""), nil
+	return request.Handler(contents, request.Url), nil
 }

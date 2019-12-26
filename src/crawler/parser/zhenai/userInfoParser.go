@@ -43,7 +43,7 @@ var objFigureRe = regexp.MustCompile(`体型:(.+)`)            //身材
 var objHasChildRe = regexp.MustCompile(`(.*有.*孩.*)`)       //有孩子没有
 var objWantHaveChildRe = regexp.MustCompile(`是否想要孩子:(.+)`) //想要孩子吗
 
-var userIdRe = regexp.MustCompile(`https://album.zhenai.com/u/([\d]+)`)
+var userIdRe = regexp.MustCompile(`http[s]?://album.zhenai.com/u/([\d]+)`)
 
 func UserInfoParser(contents []byte, url string,
 	userNickName string) engine.RequestResult {
