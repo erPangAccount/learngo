@@ -12,7 +12,7 @@ func TestCityParser(t *testing.T) {
 		panic(err)
 	}
 
-	result := zhenai.CityParser(contents)
+	result := zhenai.CityParser(contents, "")
 
 	var expectedUrls = []string{
 		"http://album.zhenai.com/u/1662184411",

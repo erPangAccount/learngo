@@ -11,7 +11,7 @@ func CityListParser(contents []byte, _ string) engine.RequestResult {
 	var requestResult engine.RequestResult
 
 	citySlice := cityRe.FindAllSubmatch(contents, -1)
-	limit := 10
+	limit := 5
 	for _, val := range citySlice {
 		request := engine.Request{
 			Url:     string(val[1]),

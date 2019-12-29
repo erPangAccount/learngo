@@ -12,7 +12,7 @@ func TestCityListParser(t *testing.T) {
 		panic(err)
 	}
 
-	result := zhenai.CityListParser(contents)
+	result := zhenai.CityListParser(contents, "")
 
 	var expectedUrls = []string{
 		"http://www.zhenai.com/zhenghun/aba",
