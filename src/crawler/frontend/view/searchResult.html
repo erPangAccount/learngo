@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>搜索结果</title>
+    <link rel="stylesheet" href="public/vendor/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="public/vendor/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="public/css/styles.css">
+</head>
+<body class="">
+<div class="page-wrapper">
+    <div class="main-container">
+        <div class="content">
+            <div class="row mb-2">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" id="input-group-1" name="input1-group2" class="form-control"
+                               placeholder="搜索关键词" value="{{.Keyword}}">
+                        <span class="input-group-btn">
+                                                <button type="button" class="btn btn-primary"><i
+                                                            class="fa fa-search"></i> 搜索</button>
+                                            </span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            搜索结果  共 {{.PageInfo.Total}} 条记录 当前第 {{.PageInfo.TargetPage}} 页 当前页记录数 {{len .Items}} 条
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>头像</th>
+                                        <th>年龄</th>
+                                        <th>体重</th>
+                                        <th>身高</th>
+                                        <th>婚姻状态</th>
+                                        <th>身材</th>
+                                        <th>月薪</th>
+                                        <th>房/车</th>
+                                        <th>择偶标准</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{range .Items}}
+                                    <tr>
+                                        {{with .DoType}}
+                                            <td><img src="{{.Avatar}}" alt="" style="width: 150px;height: 150px"></td>
+                                            <td>{{.Age}}岁</td>
+                                            <td>{{.Weight}}kg</td>
+                                            <td>{{.Height}}cm</td>
+                                            <td>{{.MaritalStatus}}</td>
+                                            <td>{{.Figure}}</td>
+                                            <td>{{.MonthlyIncome}}</td>
+                                            <td>{{.House}} / {{.Car}}</td>
+
+                                            <td class="text-nowrap">{{.UserObjInfo}}</td>
+                                        {{end}}
+
+                                    </tr>
+                                    {{else}}
+                                        没有找相关数据
+                                    {{end}}
+                                    </tbody>
+                                </table>
+
+
+                                    <div class="pagination float-right">
+                                        {{if .PageInfo.PrevPage}}
+                                            <button class="btn-primary mr-3">上一页</button>
+                                        {{end}}
+
+                                        {{if .PageInfo.NextPage}}
+                                            <button class="btn-primary">下一页</button>
+                                        {{end}}
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="public/vendor/jquery/jquery.min.js"></script>
+<script src="public/vendor/popper.js/popper.min.js"></script>
+<script src="public/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="public/vendor/chart.js/chart.min.js"></script>
+<script src="public/js/carbon.js"></script>
+<script src="public/js/demo.js"></script>
+</body>
+</html>
