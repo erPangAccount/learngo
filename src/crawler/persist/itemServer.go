@@ -2,9 +2,9 @@ package persist
 
 import (
 	"crawler/engine"
-	"github.com/olivere/elastic"
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
+	"gopkg.in/olivere/elastic.v6"
 	"log"
 )
 
