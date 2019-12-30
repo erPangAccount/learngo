@@ -16,15 +16,17 @@
         <div class="content">
             <div class="row mb-2">
                 <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" id="input-group-1" name="input1-group2" class="form-control"
-                               placeholder="搜索关键词" value="{{.Keyword}}">
-                        <span class="input-group-btn">
-                                                <button type="button" class="btn btn-primary"><i
-                                                            class="fa fa-search"></i> 搜索</button>
-                                            </span>
+                    <form action="">
+                        <div class="input-group">
+                            <input type="text" id="input-group-1" name="q" class="form-control"
+                                   placeholder="搜索关键词" value="{{.Keyword}}">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary"><i
+                                            class="fa fa-search"></i> 搜索</button>
+                            </span>
 
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="row">
@@ -52,7 +54,9 @@
                                     </thead>
                                     <tbody>
                                     {{range .Items}}
-                                    <tr>
+                                    <tr href="{{.Url}}" onclick="(function f(_this) {
+                                       window.open(_this.getAttribute('href'))
+                                    })(this)">
                                         {{with .DoType}}
                                             <td><img src="{{.Avatar}}" alt="" style="width: 150px;height: 150px"></td>
                                             <td>{{.Age}}岁</td>
@@ -68,7 +72,7 @@
 
                                     </tr>
                                     {{else}}
-                                        没有找相关数据
+                                        <div>没有找相关数据</div>
                                     {{end}}
                                     </tbody>
                                 </table>
@@ -76,11 +80,11 @@
 
                                     <div class="pagination float-right">
                                         {{if .PageInfo.PrevPage}}
-                                            <button class="btn-primary mr-3">上一页</button>
+                                            <button class="btn-primary mr-3" ><a href="search?q={{.Keyword}}&page={{.PageInfo.PrevPage}}">上一页</a></button>
                                         {{end}}
 
                                         {{if .PageInfo.NextPage}}
-                                            <button class="btn-primary">下一页</button>
+                                            <button class="btn-primary"><a href="search?q={{.Keyword}}&page={{.PageInfo.NextPage}}">下一页</a></button>
                                         {{end}}
                                     </div>
 
