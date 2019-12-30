@@ -4,8 +4,8 @@ import (
 	"crawler/engine"
 	"crawler/model"
 	"encoding/json"
-	"github.com/olivere/elastic"
 	"golang.org/x/net/context"
+	"gopkg.in/olivere/elastic.v6"
 	"testing"
 )
 

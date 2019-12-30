@@ -6,7 +6,7 @@ import (
 	"runtime"
 )
 
-const ElasticHost = "http://192.168.0.103:9200/"
+const ElasticHost = "http://192.168.12.13:9200/"
 
 type Item struct {
 	Url    string

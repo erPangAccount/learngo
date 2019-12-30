@@ -4,9 +4,8 @@ import (
 	"crawler/engine"
 	"crawler/frontend/common"
 	"crawler/frontend/model"
-	"github.com/olivere/elastic"
 	"golang.org/x/net/context"
-	"log"
+	"gopkg.in/olivere/elastic.v6"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -58,8 +57,6 @@ func (s SearchResultHandler) getSearchResult(q string, targetPage int) (model.Se
 	query := elastic.NewQueryStringQuery(q)
 
 	searchResult, err := s.client.Search("test").Query(query).Do(context.Background())
-	log.Printf("%s, %v", searchResult, err)
-
 	if err != nil {
 		return result, err
 	}
