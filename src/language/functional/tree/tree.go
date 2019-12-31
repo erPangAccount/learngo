@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"tree"
+	"language/tree"
 )
 
 func main() {

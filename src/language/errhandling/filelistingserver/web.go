@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errhandling/filelistingserver/filelisting"
+	filelisting2 "language/errhandling/filelistingserver/filelisting"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
@@ -60,7 +60,7 @@ func errHandler(handlerType errHandlerType) func(writer http.ResponseWriter, req
 }
 
 func main() {
-	http.HandleFunc("/", errHandler(filelisting.Handle))
+	http.HandleFunc("/", errHandler(filelisting2.Handle))
 
 	//http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 	//	writer.Write([]byte("Hello Go Web"))

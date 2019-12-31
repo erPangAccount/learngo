@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"queue"
+	queue2 "language/queue"
 )
 
 func main() {
-	q := queue.Queue{0}
+	q := queue2.Queue{0}
 
 	q.Push(1)
 	q.Push(2)

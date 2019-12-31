@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"interfaceCombination/mock"
+	mock2 "language/interfaceCombination/mock"
 )
 
 type Retriever interface {
@@ -39,17 +39,17 @@ func update(session Session, url string, form map[string]int) string {
 
 func main() {
 	var retriever Retriever
-	retriever = &mock.User{}
+	retriever = &mock2.User{}
 	fmt.Println(get(retriever, "a")) //[]
 
 	var poster Poster
-	poster = &mock.User{}
+	poster = &mock2.User{}
 	fmt.Println(post(poster, "a", map[string]int{ // ok
 		"id": 123,
 	}))
 
 	var sessioner Session
-	sessioner = &mock.User{}
+	sessioner = &mock2.User{}
 	fmt.Println(add(sessioner, "a", map[string]int{ // ok
 		"id": 1234,
 	}))
@@ -62,7 +62,7 @@ func main() {
 	//ok
 	//[12345 1234]
 
-	user := &mock.User{
+	user := &mock2.User{
 		List: []int{1, 2, 3, 4, 5},
 	}
 	fmt.Println(user) //User.List = [1 2 3 4 5]

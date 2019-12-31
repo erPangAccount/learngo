@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"tree"
+	tree2 "language/tree"
 )
 
 type MyTreeNode struct {
-	node *tree.Node
+	node *tree2.Node
 }
 
 /**
@@ -24,12 +24,12 @@ func (myNode *MyTreeNode) postOrder() {
 }
 
 func main() {
-	var root tree.Node
+	var root tree2.Node
 
-	root = tree.Node{Value: 3}
-	root.Left = &tree.Node{}
-	root.Right = &tree.Node{5, nil, nil}
-	root.Right.Left = tree.CreateNode(2)
+	root = tree2.Node{Value: 3}
+	root.Left = &tree2.Node{}
+	root.Right = &tree2.Node{5, nil, nil}
+	root.Right.Left = tree2.CreateNode(2)
 	fmt.Println(root) //{3 0xc000074460 0xc000074480}
 
 	/**
