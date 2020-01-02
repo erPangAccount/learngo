@@ -34,7 +34,7 @@ func main() {
 	}
 	http.Handle("/search", searchResultHandler)
 
-	port := ":8888"
+	port := ":9999"
 	serve := http.ListenAndServe(port, nil)
 	if serve != nil {
 		panic(serve)

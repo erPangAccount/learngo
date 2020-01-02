@@ -1,16 +1,27 @@
-package persist
+package main
 
 import (
 	"crawler/engine"
 	"crawler/model"
-	"encoding/json"
-	"golang.org/x/net/context"
-	"gopkg.in/olivere/elastic.v6"
+	"crawler/service"
 	"testing"
+	"time"
 )
 
-func TestSave(t *testing.T) {
-	user := engine.Item{
+func TestServer(t *testing.T) {
+	const host = ":1234"
+	//开启服务
+	go startServer(host, "test1")
+	time.Sleep(time.Second)
+
+	//建立对应客户端
+	client, e := service.NewRpcClient(host)
+	if e != nil {
+		panic(e)
+	}
+
+	//客户端调用服务
+	item := engine.Item{
 		Url:  "https://album.zhenai.com/u/1662184411",
 		Type: "",
 		Id:   "1662184411",
@@ -53,40 +64,10 @@ func TestSave(t *testing.T) {
 		},
 	}
 
-	// TODO 开启elasticsearch后再试
-	client, err := elastic.NewClient(
-		elastic.SetURL(engine.ElasticHost),
-		elastic.SetSniff(false),
-	)
-	if err != nil {
-		panic(err)
+	var result string
+	e = client.Call("ItemService.Save", item, &result)
+	if !(e == nil && result != "") {
+		t.Errorf("error:%v, result=%v", e, result)
 	}
 
-	id, err := Save(client, "test", user)
-	if err != nil && id != "exists" {
-		panic(err)
-	}
-
-	if user.Type == "" {
-		user.Type = "index"
-	}
-
-	result, err := client.Get().Index("test").Type(user.Type).Id(user.Id).Do(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	var getData engine.Item
-	err = json.Unmarshal(*result.Source, &getData)
-	if err != nil {
-		panic(err)
-	}
-	getData.DoType, err = model.FromJsonObj(getData.DoType)
-	if err != nil {
-		panic(err)
-	}
-
-	if getData != user {
-		t.Errorf("Got %+v, expected %+v", getData, user)
-	}
-	t.Logf("Got %+v", getData)
 }
