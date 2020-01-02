@@ -1,25 +1,17 @@
 package model
 
+import (
+	"crawler/engine"
+)
+
 type SearchResult struct {
 	Keyword  string
 	PageInfo struct {
-		Total      int
+		Total      int64
 		PrevPage   int
 		TargetPage int
 		NextPage   int
 		PageSize   int
 	}
-	Items []interface{}
-}
-
-type Item struct {
-	Url       string
-	Avatar    string
-	NickName  string
-	Sex       string
-	Age       int
-	Weight    int
-	Height    int
-	OtherInfo string
-	ObjInfo   string
+	Items []engine.Item
 }
