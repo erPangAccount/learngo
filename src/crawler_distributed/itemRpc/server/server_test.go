@@ -3,7 +3,7 @@ package main
 import (
 	"crawler/engine"
 	"crawler/model"
-	"crawler/service"
+	"crawler_distributed/rpc"
 	"testing"
 	"time"
 )
@@ -15,7 +15,7 @@ func TestServer(t *testing.T) {
 	time.Sleep(time.Second)
 
 	//建立对应客户端
-	client, e := service.NewRpcClient(host)
+	client, e := rpc.NewRpcClient(host)
 	if e != nil {
 		panic(e)
 	}

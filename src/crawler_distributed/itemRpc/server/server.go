@@ -1,27 +1,27 @@
 package main
 
 import (
-	"crawler/engine"
-	"crawler/service"
-	"crawler/service/itemRpc"
+	"crawler_distributed/config"
+	"crawler_distributed/itemRpc"
+	"crawler_distributed/rpc"
 	"gopkg.in/olivere/elastic.v6"
 	"log"
 )
 
 func main() {
-	log.Fatal(startServer(":1234", "test"))
+	log.Fatal(startServer(config.ItemServiceHost, config.ElasticIndex))
 }
 
 func startServer(host string, index string) error {
 	client, e := elastic.NewClient(
-		elastic.SetURL(engine.ElasticHost),
+		elastic.SetURL(config.ElasticHost),
 		elastic.SetSniff(false),
 	)
 	if e != nil {
 		return e
 	}
 
-	return service.ServeRpc(
+	return rpc.ServeRpc(
 		&itemRpc.ItemService{
 			Client: client,
 			Index:  index,
