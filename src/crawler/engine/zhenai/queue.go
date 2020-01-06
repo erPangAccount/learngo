@@ -48,7 +48,7 @@ func createQueueWorker(in chan engine.Request, out chan engine.RequestResult, s 
 		for {
 			s.WorkerReady(in)
 			request := <-in
-			result, err := worker(request)
+			result, err := Worker(request)
 			if err != nil {
 				continue
 			}

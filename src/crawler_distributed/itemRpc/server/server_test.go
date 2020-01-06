@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestServer(t *testing.T) {
+func TestItemService(t *testing.T) {
 	const host = ":1234"
 	//开启服务
 	go startServer(host, "test1")

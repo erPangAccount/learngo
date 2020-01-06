@@ -18,7 +18,7 @@ func (s SimpleEngine) Run(seed []engine.Request) {
 		requests = requests[1:]
 
 		//获取开始地址
-		result, err := worker(targetRequest)
+		result, err := Worker(targetRequest)
 		if err != nil {
 			continue
 		}
@@ -30,12 +30,12 @@ func (s SimpleEngine) Run(seed []engine.Request) {
 	}
 }
 
-func worker(request engine.Request) (engine.RequestResult, error) {
+func Worker(request engine.Request) (engine.RequestResult, error) {
 	contents, err := fetche.Fetcher(request.Url)
 	if err != nil {
 		log.Println(err)
 		return engine.RequestResult{}, err
 	}
 
-	return request.Handler(contents, request.Url), nil
+	return request.Handler.Parser(contents, request.Url), nil
 }

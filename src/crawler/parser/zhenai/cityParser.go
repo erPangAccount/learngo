@@ -2,6 +2,7 @@ package zhenai
 
 import (
 	"crawler/engine"
+	"crawler_distributed/config"
 	"log"
 	"net/url"
 	"regexp"
@@ -41,7 +42,7 @@ func parserHead(contents []byte) engine.RequestResult {
 		}
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
 			Url:     path,
-			Handler: CreateParserFunc(string(val[3])),
+			Handler: NewUserInfoParser(string(val[3])),
 		})
 	}
 	return requesrResult
@@ -56,7 +57,7 @@ func parserList(contents []byte) engine.RequestResult {
 	for _, submatch := range submatchs {
 		requesrResult.Requests = append(requesrResult.Requests, engine.Request{
 			Url:     string(submatch[1]),
-			Handler: CreateParserFunc(string(submatch[2])),
+			Handler: NewUserInfoParser(string(submatch[2])),
 		})
 	}
 
@@ -73,15 +74,27 @@ func getOtherUrl(contents []byte) engine.RequestResult {
 	for _, submatch := range submatchs {
 		requestResult.Requests = append(requestResult.Requests, engine.Request{
 			Url:     string(submatch[1]),
-			Handler: CityParser,
+			Handler: engine.NewNormalParserFunc(CityParser, config.CityParser),
 		})
 	}
 
 	return requestResult
 }
 
-func CreateParserFunc(name string) engine.ParserFunc {
-	return func(bytes []byte, url string) engine.RequestResult {
-		return UserInfoParser(bytes, url, name)
+type userInfoParser struct {
+	userName string
+}
+
+func (u *userInfoParser) Parser(contents []byte, url string) engine.RequestResult {
+	return UserInfoParser(contents, url, u.userName)
+}
+
+func (u *userInfoParser) Serialize() (name string, ags interface{}) {
+	return config.UserInfoParser, u.userName
+}
+
+func NewUserInfoParser(name string) *userInfoParser {
+	return &userInfoParser{
+		userName: name,
 	}
 }

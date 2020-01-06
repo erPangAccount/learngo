@@ -14,7 +14,7 @@ func main() {
 	//	WorkerCount: 10,
 	//	ItemChan:    persist.ItemServer(),
 	//}
-	itemChan, err := persist.ItemServer()
+	itemChan, err := persist.ItemServer("test")
 	if err != nil {
 		panic(err)
 	}

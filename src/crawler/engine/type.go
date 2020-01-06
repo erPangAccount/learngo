@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"crawler_distributed/config"
 	"fmt"
 	"reflect"
 	"runtime"
@@ -17,9 +18,14 @@ type Item struct {
 
 type ParserFunc func([]byte, string) RequestResult
 
+type Parser interface {
+	Parser(contents []byte, url string) RequestResult
+	Serialize() (name string, ags interface{})
+}
+
 type Request struct {
 	Url     string
-	Handler ParserFunc
+	Handler Parser
 }
 
 type RequestResult struct {
@@ -27,8 +33,34 @@ type RequestResult struct {
 	Items    []Item
 }
 
-func NilRequestResultFunc([]byte, string) RequestResult {
+type NilRequestResultFunc struct{}
+
+func (n NilRequestResultFunc) Parser(_ []byte, _ string) RequestResult {
 	return RequestResult{}
+}
+
+func (n NilRequestResultFunc) Serialize() (name string, ags interface{}) {
+	return config.NilRequestResultFunc, nil
+}
+
+type NormalParserFunc struct {
+	parser ParserFunc
+	name   string
+}
+
+func (n *NormalParserFunc) Parser(contents []byte, url string) RequestResult {
+	return n.parser(contents, url)
+}
+
+func (n *NormalParserFunc) Serialize() (name string, ags interface{}) {
+	return n.name, nil
+}
+
+func NewNormalParserFunc(parser ParserFunc, name string) *NormalParserFunc {
+	return &NormalParserFunc{
+		parser: parser,
+		name:   name,
+	}
 }
 
 func GetFuncName(f interface{}) string {

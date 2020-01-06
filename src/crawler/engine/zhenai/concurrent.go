@@ -53,7 +53,7 @@ func createWorker(in chan engine.Request, out chan engine.RequestResult) {
 	go func() {
 		for {
 			request := <-in
-			result, e := worker(request)
+			result, e := Worker(request)
 			if e != nil {
 				continue
 			}

@@ -2,6 +2,7 @@ package zhenai
 
 import (
 	"crawler/engine"
+	"crawler_distributed/config"
 	"regexp"
 )
 
@@ -15,7 +16,7 @@ func CityListParser(contents []byte, _ string) engine.RequestResult {
 	for _, val := range citySlice {
 		request := engine.Request{
 			Url:     string(val[1]),
-			Handler: CityParser,
+			Handler: engine.NewNormalParserFunc(CityParser, config.CityParser),
 		}
 		requestResult.Requests = append(requestResult.Requests, request)
 		//requestResult.Items = append(requestResult.Items, val[2])
