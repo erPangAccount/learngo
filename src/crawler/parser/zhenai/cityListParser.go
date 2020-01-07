@@ -19,7 +19,6 @@ func CityListParser(contents []byte, _ string) engine.RequestResult {
 			Handler: engine.NewNormalParserFunc(CityParser, config.CityParser),
 		}
 		requestResult.Requests = append(requestResult.Requests, request)
-		//requestResult.Items = append(requestResult.Items, val[2])
 		limit--
 		if limit == 0 {
 			break

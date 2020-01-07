@@ -10,7 +10,7 @@ const (
 
 	//elastic
 	ElasticIndex = "test"
-	ElasticHost  = "192.168.12.13:9200"
+	ElasticHost  = "http://192.168.12.13:9200"
 
 	//ParserName
 	CityParser           = "CityParser"

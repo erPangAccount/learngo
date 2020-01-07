@@ -5,12 +5,15 @@ import (
 )
 
 type QueueEngine struct {
-	Scheduler   Scheduler
-	WorkerCount int
-	ItemChan    chan engine.Item
+	Scheduler    Scheduler
+	WorkerCount  int
+	ItemChan     chan engine.Item
+	WorkerClient WorkerClient
 }
 
 var visitedUrls = make(map[string]string)
+
+type WorkerClient func(engine.Request) (engine.RequestResult, error)
 
 func (q *QueueEngine) Run(seeds []engine.Request) {
 	if q.WorkerCount < 1 {
@@ -20,7 +23,7 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 	out := make(chan engine.RequestResult)
 	q.Scheduler.Run()
 	for i := 0; i < q.WorkerCount; i++ {
-		createQueueWorker(q.Scheduler.ReturnWorkChan(), out, q.Scheduler)
+		q.createQueueWorker(q.Scheduler.ReturnWorkChan(), out, q.Scheduler)
 	}
 
 	for _, request := range seeds {
@@ -43,12 +46,12 @@ func (q *QueueEngine) Run(seeds []engine.Request) {
 	}
 }
 
-func createQueueWorker(in chan engine.Request, out chan engine.RequestResult, s ReadNotify) {
+func (q *QueueEngine) createQueueWorker(in chan engine.Request, out chan engine.RequestResult, s ReadNotify) {
 	go func() {
 		for {
 			s.WorkerReady(in)
 			request := <-in
-			result, err := Worker(request)
+			result, err := q.WorkerClient(request)
 			if err != nil {
 				continue
 			}

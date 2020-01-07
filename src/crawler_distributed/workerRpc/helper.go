@@ -2,6 +2,7 @@ package workerRpc
 
 import (
 	"crawler/engine"
+	"crawler/model"
 	"crawler/parser/zhenai"
 	"crawler_distributed/config"
 	"github.com/pkg/errors"
@@ -61,8 +62,16 @@ func DeserializeRequest(r Request) (engine.Request, error) {
 }
 
 func DeserializeRequestResult(r RequestResult) engine.RequestResult {
-	result := engine.RequestResult{
-		Items: r.Items,
+	result := engine.RequestResult{}
+
+	for _, item := range r.Items {
+		doType, e := model.FromJsonObj(item.DoType)
+		if e != nil {
+			log.Printf("json decode error: %v", item.DoType)
+			continue
+		}
+		item.DoType = doType
+		result.Items = append(result.Items, item)
 	}
 
 	for _, req := range r.Requests {
@@ -74,7 +83,7 @@ func DeserializeRequestResult(r RequestResult) engine.RequestResult {
 
 		result.Requests = append(result.Requests, enginRequest)
 	}
-
+	log.Println(result.Items)
 	return result
 }
 

@@ -1,6 +1,8 @@
 package workerRpc
 
-import "crawler/engine/zhenai"
+import (
+	"crawler/engine/zhenai"
+)
 
 type WorkService struct{}
 

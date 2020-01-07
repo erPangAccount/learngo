@@ -5,7 +5,6 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 	"gopkg.in/olivere/elastic.v6"
-	"log"
 )
 
 func ItemServer(index string) (chan engine.Item, error) {
@@ -21,12 +20,12 @@ func ItemServer(index string) (chan engine.Item, error) {
 		itemCount := 0
 		for {
 			item := <-out
-			log.Printf("item server : got item #%d: %v", itemCount, item)
+			//log.Printf("item server : got item #%d: %v", itemCount, item)
 			itemCount++
 
 			_, err := Save(client, index, item)
 			if err != nil {
-				log.Printf("item server: save error %v: %v", item, err)
+				//log.Printf("item server: save error %v: %v", item, err)
 			}
 		}
 	}()

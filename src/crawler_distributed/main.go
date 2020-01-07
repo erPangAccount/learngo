@@ -6,6 +6,7 @@ import (
 	zhenai2 "crawler/seed/zhenai"
 	"crawler_distributed/config"
 	client2 "crawler_distributed/itemRpc/client"
+	"crawler_distributed/workerRpc/client"
 )
 
 func main() {
@@ -14,10 +15,16 @@ func main() {
 		panic(err)
 	}
 
+	workerClient, err := client.CreateWorkerClient(config.WorkerServiceHost)
+	if err != nil {
+		panic(err)
+	}
+
 	e := zhenai.QueueEngine{
-		Scheduler:   &scheduler.QueueScheduler{},
-		WorkerCount: 10,
-		ItemChan:    itemChan,
+		Scheduler:    &scheduler.QueueScheduler{},
+		WorkerCount:  10,
+		ItemChan:     itemChan,
+		WorkerClient: workerClient,
 	}
 
 	e.Run(zhenai2.Seed())
