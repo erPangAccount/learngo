@@ -83,7 +83,6 @@ func DeserializeRequestResult(r RequestResult) engine.RequestResult {
 
 		result.Requests = append(result.Requests, enginRequest)
 	}
-	log.Println(result.Items)
 	return result
 }
 

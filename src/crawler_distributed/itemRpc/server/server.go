@@ -4,12 +4,21 @@ import (
 	"crawler_distributed/config"
 	"crawler_distributed/itemRpc"
 	"crawler_distributed/rpc"
+	"flag"
+	"fmt"
 	"gopkg.in/olivere/elastic.v6"
 	"log"
 )
 
+var port = flag.Int("port", 0, "itemService port")
+
 func main() {
-	log.Fatal(startServer(config.ItemServiceHost, config.ElasticIndex))
+	flag.Parse()
+	if *port == 0 {
+		panic("must have a port!")
+	}
+
+	log.Fatal(startServer(fmt.Sprintf(":%d", *port), config.ElasticIndex))
 }
 
 func startServer(host string, index string) error {
